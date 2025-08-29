@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, X, MapPin, GraduationCap } from "lucide-react";
+import { MapPin, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -70,7 +70,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
             isLiked ? "bg-primary/80" : "bg-muted/80"
           }`}>
             <div className="text-white text-6xl">
-              {isLiked ? "❤️" : "👎"}
+              {isLiked ? "🔫👆" : "🤘👇"}
             </div>
           </div>
         )}
@@ -112,7 +112,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
             className="w-14 h-14 rounded-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground touch-target"
             onClick={() => handleSwipe("left")}
           >
-            <X className="w-6 h-6" />
+            <span className="text-2xl">🤘👇</span>
           </Button>
           
           <Button
@@ -121,7 +121,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
             className="w-14 h-14 rounded-full touch-target"
             onClick={() => handleSwipe("right")}
           >
-            <Heart className="w-6 h-6" />
+            <span className="text-2xl">🔫👆</span>
           </Button>
         </div>
       </div>
