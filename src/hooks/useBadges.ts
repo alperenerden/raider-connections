@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { STDBadge } from "@/components/BadgeSystem";
 
+// Import badge icons
+import chlamydiaIcon from "@/assets/badges/chlamydia.png";
+import gonorrheaIcon from "@/assets/badges/gonorrhea.png";
+import syphilisIcon from "@/assets/badges/syphilis.png";
+import trichomoniasisIcon from "@/assets/badges/trichomoniasis.png";
+import crabsIcon from "@/assets/badges/crabs.png";
+import herpesIcon from "@/assets/badges/herpes.png";
+import aidsIcon from "@/assets/badges/aids.png";
+
 const initialBadges: STDBadge[] = [
   {
     id: "chlamydia",
@@ -9,7 +18,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 50,
     tier: "bronze",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: chlamydiaIcon
   },
   {
     id: "gonorrhea", 
@@ -18,7 +28,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 100,
     tier: "silver",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: gonorrheaIcon
   },
   {
     id: "syphilis",
@@ -27,7 +38,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 150,
     tier: "gold",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: syphilisIcon
   },
   {
     id: "trichomoniasis",
@@ -36,7 +48,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 200,
     tier: "platinum",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: trichomoniasisIcon
   },
   {
     id: "crabs",
@@ -45,7 +58,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 250,
     tier: "diamond", 
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: crabsIcon
   },
   {
     id: "herpes",
@@ -54,7 +68,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 300,
     tier: "legendary",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: herpesIcon
   },
   {
     id: "aids",
@@ -63,7 +78,8 @@ const initialBadges: STDBadge[] = [
     requiredMatches: 350,
     tier: "mythic",
     unlocked: false,
-    displayOnProfile: false
+    displayOnProfile: false,
+    icon: aidsIcon
   }
 ];
 

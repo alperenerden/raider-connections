@@ -168,9 +168,14 @@ const MainApp = ({ onLogout }: MainAppProps) => {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {getDisplayedBadges().map(badge => (
-                <Badge key={badge.id} className="bg-primary/20 text-primary">
-                  {badge.name}
-                </Badge>
+                <div key={badge.id} className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1">
+                  <img 
+                    src={badge.icon} 
+                    alt={badge.name}
+                    className="w-4 h-4 object-contain"
+                  />
+                  <span className="text-sm font-medium text-primary">{badge.name}</span>
+                </div>
               ))}
             </div>
           </CardContent>

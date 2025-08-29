@@ -4,6 +4,15 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trophy, Lock } from "lucide-react";
 
+// Import badge icons
+import chlamydiaIcon from "@/assets/badges/chlamydia.png";
+import gonorrheaIcon from "@/assets/badges/gonorrhea.png";
+import syphilisIcon from "@/assets/badges/syphilis.png";
+import trichomoniasisIcon from "@/assets/badges/trichomoniasis.png";
+import crabsIcon from "@/assets/badges/crabs.png";
+import herpesIcon from "@/assets/badges/herpes.png";
+import aidsIcon from "@/assets/badges/aids.png";
+
 export interface STDBadge {
   id: string;
   name: string;
@@ -12,6 +21,7 @@ export interface STDBadge {
   tier: "bronze" | "silver" | "gold" | "platinum" | "diamond" | "legendary" | "mythic";
   unlocked: boolean;
   displayOnProfile: boolean;
+  icon: string;
 }
 
 interface BadgeSystemProps {
@@ -43,17 +53,25 @@ const BadgeSystem = ({ badges, currentMatches, onToggleDisplay }: BadgeSystemPro
           <Card key={badge.id} className={`${badge.unlocked ? "" : "opacity-60"}`}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0">
                   {badge.unlocked ? (
-                    <Trophy className="w-6 h-6 text-primary" />
+                    <img 
+                      src={badge.icon} 
+                      alt={badge.name}
+                      className="w-8 h-8 object-contain"
+                    />
                   ) : (
-                    <Lock className="w-6 h-6 text-muted-foreground" />
+                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                      <Lock className="w-4 h-4 text-muted-foreground" />
+                    </div>
                   )}
-                  <div>
-                    <CardTitle className="text-lg">{badge.name}</CardTitle>
-                    <CardDescription>{badge.description}</CardDescription>
-                  </div>
                 </div>
+                <div>
+                  <CardTitle className="text-lg">{badge.name}</CardTitle>
+                  <CardDescription>{badge.description}</CardDescription>
+                </div>
+              </div>
                 <Badge className={tierColors[badge.tier]}>
                   {badge.tier.toUpperCase()}
                 </Badge>
