@@ -1,10 +1,14 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import SwipeCard from "@/components/SwipeCard";
+import BadgeSystem from "@/components/BadgeSystem";
+import { useBadges } from "@/hooks/useBadges";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import RaiderRashLogo from "@/components/RaiderRashLogo";
-import { Heart, MessageCircle, MapPin, Settings, User, Filter } from "lucide-react";
+import { Heart, MessageCircle, MapPin, Settings, User, Filter, LogOut } from "lucide-react";
 
 interface MainAppProps {
   onLogout: () => void;
@@ -12,6 +16,8 @@ interface MainAppProps {
 
 const MainApp = ({ onLogout }: MainAppProps) => {
   const [activeTab, setActiveTab] = useState("discover");
+  const [matchCount, setMatchCount] = useState(75); // Example match count
+  const { badges, toggleBadgeDisplay, getDisplayedBadges } = useBadges(matchCount);
 
   // Mock data for demo
   const mockProfiles = [
@@ -42,6 +48,11 @@ const MainApp = ({ onLogout }: MainAppProps) => {
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
 
   const handleSwipe = (direction: "left" | "right") => {
+    if (direction === "right") {
+      setMatchCount(prev => prev + 1);
+      console.log("Match created!");
+    }
+    
     console.log(`Swiped ${direction} on profile ${mockProfiles[currentProfileIndex]?.name}`);
     if (currentProfileIndex < mockProfiles.length - 1) {
       setCurrentProfileIndex(currentProfileIndex + 1);
@@ -128,30 +139,71 @@ const MainApp = ({ onLogout }: MainAppProps) => {
     </div>
   );
 
-  const renderProfileTab = () => (
-    <div className="p-4 pb-20">
-      <div className="text-center space-y-6">
-        <div className="w-32 h-32 bg-gradient-primary rounded-full mx-auto flex items-center justify-center">
-          <User className="w-16 h-16 text-white" />
-        </div>
-        
-        <div>
-          <h2 className="text-2xl font-bold">Demo User</h2>
-          <p className="text-muted-foreground">Computer Science • Senior</p>
-        </div>
+  const renderBadgesTab = () => (
+    <BadgeSystem 
+      badges={badges}
+      currentMatches={matchCount}
+      onToggleDisplay={toggleBadgeDisplay}
+    />
+  );
 
-        <div className="space-y-3">
-          <Button variant="outline" className="w-full">
+  const renderProfileTab = () => (
+    <div className="space-y-6 p-4 pb-20">
+      <div className="text-center">
+        <Avatar className="w-24 h-24 mx-auto mb-4">
+          <AvatarImage src="/placeholder.svg" alt="Your profile" />
+          <AvatarFallback>RR</AvatarFallback>
+        </Avatar>
+        <h2 className="text-2xl font-bold text-primary">Red Raider</h2>
+        <p className="text-muted-foreground">Senior • Computer Science</p>
+        <p className="text-sm text-muted-foreground">Matches: {matchCount}</p>
+      </div>
+
+      {/* Display selected badges */}
+      {getDisplayedBadges().length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>My Infections</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {getDisplayedBadges().map(badge => (
+                <Badge key={badge.id} className="bg-primary/20 text-primary">
+                  {badge.name}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="w-5 h-5" />
+            Account Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button variant="outline" className="w-full justify-start">
             Edit Profile
           </Button>
-          <Button variant="outline" className="w-full">
-            Account Settings  
+          <Button variant="outline" className="w-full justify-start">
+            Preferences
           </Button>
-          <Button variant="destructive" className="w-full" onClick={onLogout}>
-            Sign Out
+          <Button variant="outline" className="w-full justify-start">
+            Privacy Settings
           </Button>
-        </div>
-      </div>
+          <Button 
+            variant="destructive" 
+            className="w-full justify-start"
+            onClick={onLogout}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Log Out
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 
@@ -173,6 +225,7 @@ const MainApp = ({ onLogout }: MainAppProps) => {
       case "discover": return renderDiscoverTab();
       case "matches": return renderMatchesTab();
       case "hotspots": return renderHotspotsTab();
+      case "badges": return renderBadgesTab();
       case "profile": return renderProfileTab();
       default: return renderDiscoverTab();
     }
