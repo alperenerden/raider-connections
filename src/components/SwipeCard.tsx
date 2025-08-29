@@ -32,7 +32,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
   };
 
   return (
-    <div className={`swipe-card w-full max-w-sm mx-auto transform transition-all duration-300 ${
+    <div className={`swipe-card w-full max-w-sm mx-auto transform transition-all duration-300 no-select ${
       isLiked === true ? "scale-110 rotate-12" : 
       isLiked === false ? "scale-110 -rotate-12" : ""
     }`}>
@@ -109,7 +109,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
           <Button
             variant="swipe"
             size="icon"
-            className="w-14 h-14 rounded-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+            className="w-14 h-14 rounded-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground touch-target"
             onClick={() => handleSwipe("left")}
           >
             <X className="w-6 h-6" />
@@ -118,7 +118,7 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
           <Button
             variant="hero"
             size="icon"
-            className="w-14 h-14 rounded-full"
+            className="w-14 h-14 rounded-full touch-target"
             onClick={() => handleSwipe("right")}
           >
             <Heart className="w-6 h-6" />
