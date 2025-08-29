@@ -4,16 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Trophy, Lock } from "lucide-react";
 
-// Import badge icons
-import chlamydiaIcon from "@/assets/badges/chlamydia.png";
-import gonorrheaIcon from "@/assets/badges/gonorrhea.png";
-import syphilisIcon from "@/assets/badges/syphilis.png";
-import trichomoniasisIcon from "@/assets/badges/trichomoniasis.png";
-import crabsIcon from "@/assets/badges/crabs.png";
-import herpesIcon from "@/assets/badges/herpes.png";
-import aidsIcon from "@/assets/badges/aids.png";
-
-export interface STDBadge {
+export interface MatchBadge {
   id: string;
   name: string;
   description: string;
@@ -25,7 +16,7 @@ export interface STDBadge {
 }
 
 interface BadgeSystemProps {
-  badges: STDBadge[];
+  badges: MatchBadge[];
   currentMatches: number;
   onToggleDisplay: (badgeId: string) => void;
 }
@@ -44,7 +35,7 @@ const BadgeSystem = ({ badges, currentMatches, onToggleDisplay }: BadgeSystemPro
   return (
     <div className="space-y-6 p-4">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-primary">Infection Collection</h2>
+        <h2 className="text-2xl font-bold text-primary">Achievement Collection</h2>
         <p className="text-muted-foreground">Match Count: {currentMatches}</p>
       </div>
 
