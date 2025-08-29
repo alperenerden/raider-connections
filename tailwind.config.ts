@@ -52,6 +52,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Texas Tech specific colors
+				ttu: {
+					red: 'hsl(var(--ttu-red))',
+					black: 'hsl(var(--ttu-black))',
+					gray: 'hsl(var(--ttu-gray))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
