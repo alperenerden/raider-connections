@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,15 +11,87 @@ interface LandingPageProps {
 }
 
 const LandingPage = ({ onLogin }: LandingPageProps) => {
+  const [showIntro, setShowIntro] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntro(false);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent, type: "login" | "signup") => {
     e.preventDefault();
     // For now, just simulate login
     onLogin();
   };
+
+  const skipIntro = () => {
+    setShowIntro(false);
+  };
+
+  if (showIntro) {
+    return (
+      <div className="min-h-screen gradient-dark flex flex-col items-center justify-center p-4 overflow-hidden">
+        <div className="text-center space-y-8 animate-fade-in">
+          {/* Animated Logo */}
+          <div className="animate-scale-in animation-delay-500">
+            <RaiderRashLogo size="xl" className="mx-auto transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          
+          {/* Animated Hook Text */}
+          <div className="space-y-4 animate-fade-in animation-delay-1000">
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-red-500 via-red-400 to-orange-400 bg-clip-text text-transparent animate-pulse">
+              Ready to catch
+            </h1>
+            <h2 className="text-5xl font-bold text-white animate-bounce animation-delay-1500">
+              something?
+            </h2>
+          </div>
+          
+          {/* Animated Tagline */}
+          <div className="animate-fade-in animation-delay-2000">
+            <p className="text-2xl text-red-300 font-semibold">
+              It's time to spread the Rash! 🔥
+            </p>
+            <p className="text-lg text-gray-300 mt-2">
+              Texas Tech's hottest dating app
+            </p>
+          </div>
+          
+          {/* Skip Button */}
+          <div className="animate-fade-in animation-delay-2500">
+            <Button 
+              onClick={skipIntro}
+              variant="outline" 
+              className="mt-8 border-red-400 text-red-400 hover:bg-red-400 hover:text-white transition-all duration-300"
+            >
+              Skip Intro
+            </Button>
+          </div>
+        </div>
+        
+        {/* Floating Hearts Animation */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(6)].map((_, i) => (
+            <Heart 
+              key={i}
+              className={`absolute text-red-400/20 w-8 h-8 animate-bounce animation-delay-${(i + 1) * 300}`}
+              style={{
+                left: `${10 + i * 15}%`,
+                top: `${20 + (i % 2) * 40}%`,
+                animationDuration: `${2 + i * 0.5}s`,
+                animationDelay: `${i * 0.3}s`
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen gradient-dark flex flex-col items-center justify-center p-4">
