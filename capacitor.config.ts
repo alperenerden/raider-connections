@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.raiderrash.app', // Change this to your own unique bundle ID
+  appId: 'com.raiderrash.app',
   appName: 'Raider Rash',
   webDir: 'dist',
   // Remove server config for production build
