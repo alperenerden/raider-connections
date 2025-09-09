@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { MapPin, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,18 +18,18 @@ interface SwipeCardProps {
   onSwipe: (direction: "left" | "right") => void;
 }
 
-const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
+const SwipeCard = memo(({ profile, onSwipe }: SwipeCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState<boolean | null>(null);
 
-  const handleSwipe = (direction: "left" | "right") => {
+  const handleSwipe = useCallback((direction: "left" | "right") => {
     setIsLiked(direction === "right");
     setTimeout(() => {
       onSwipe(direction);
       setIsLiked(null);
       setCurrentImageIndex(0);
     }, 300);
-  };
+  }, [onSwipe]);
 
   return (
     <div className={`swipe-card w-full max-w-sm mx-auto transform transition-all duration-300 no-select ${
@@ -127,6 +127,6 @@ const SwipeCard = ({ profile, onSwipe }: SwipeCardProps) => {
       </div>
     </div>
   );
-};
+});
 
 export default SwipeCard;

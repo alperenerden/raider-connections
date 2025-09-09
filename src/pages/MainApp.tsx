@@ -62,8 +62,8 @@ const MainApp = ({ onLogout }: MainAppProps) => {
   };
 
   const renderDiscoverTab = () => (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] p-4">
-      <div className="flex items-center justify-between w-full max-w-sm mb-4">
+    <div className="flex flex-col min-h-screen overflow-y-auto pb-20">
+      <div className="flex items-center justify-between w-full p-4">
         <RaiderRashLogo size="sm" />
         <h2 className="text-xl font-bold">Discover</h2>
         <Button variant="ghost" size="icon">
@@ -71,58 +71,67 @@ const MainApp = ({ onLogout }: MainAppProps) => {
         </Button>
       </div>
 
-      {mockProfiles[currentProfileIndex] ? (
-        <SwipeCard 
-          profile={mockProfiles[currentProfileIndex]} 
-          onSwipe={handleSwipe}
-        />
-      ) : (
-        <div className="text-center space-y-4">
-          <div className="text-6xl">🎉</div>
-          <h3 className="text-xl font-semibold">That's everyone for now!</h3>
-          <p className="text-muted-foreground">Check back later for more Raiders</p>
-        </div>
-      )}
+      <div className="flex-1 flex items-center justify-center p-4">
+        {mockProfiles[currentProfileIndex] ? (
+          <SwipeCard 
+            profile={mockProfiles[currentProfileIndex]} 
+            onSwipe={handleSwipe}
+          />
+        ) : (
+          <div className="text-center space-y-4">
+            <div className="text-6xl">🎉</div>
+            <h3 className="text-xl font-semibold">That's everyone for now!</h3>
+            <p className="text-muted-foreground">Check back later for more Raiders</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 
   const renderMatchesTab = () => (
-    <div className="p-4 pb-20">
-      <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen overflow-y-auto pb-20">
+      <div className="flex items-center justify-between p-4 mb-6">
         <h2 className="text-2xl font-bold">Your Matches</h2>
         <Badge variant="secondary">{mockMatches.length}</Badge>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 px-4">
         {mockMatches.map((match) => (
-          <div key={match.id} className="flex items-center gap-4 p-4 gradient-card rounded-lg">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-              <span className="text-2xl">📸</span>
+          <Button
+            key={match.id} 
+            variant="ghost"
+            className="w-full h-auto p-4 justify-start hover:bg-muted/50"
+            onClick={() => console.log(`Opening chat with ${match.name}`)}
+          >
+            <div className="flex items-center gap-4 w-full">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                <span className="text-2xl">📸</span>
+              </div>
+              <div className="flex-1 text-left">
+                <h3 className="font-semibold">{match.name}</h3>
+                <p className="text-sm text-muted-foreground">{match.lastMessage}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-muted-foreground">{match.time}</p>
+                {match.unread && (
+                  <div className="w-3 h-3 bg-primary rounded-full ml-auto mt-1"></div>
+                )}
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold">{match.name}</h3>
-              <p className="text-sm text-muted-foreground">{match.lastMessage}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground">{match.time}</p>
-              {match.unread && (
-                <div className="w-3 h-3 bg-primary rounded-full ml-auto mt-1"></div>
-              )}
-            </div>
-          </div>
+          </Button>
         ))}
       </div>
     </div>
   );
 
   const renderHotspotsTab = () => (
-    <div className="p-4 pb-20">
-      <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen overflow-y-auto pb-20">
+      <div className="flex items-center justify-between p-4 mb-6">
         <h2 className="text-2xl font-bold">Campus Hotspots</h2>
         <MapPin className="w-6 h-6 text-primary" />
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 px-4">
         {mockHotspots.map((spot) => (
           <div key={spot.id} className="gradient-card p-4 rounded-lg">
             <div className="flex items-center justify-between mb-2">
@@ -147,70 +156,118 @@ const MainApp = ({ onLogout }: MainAppProps) => {
     />
   );
 
-  const renderProfileTab = () => (
-    <div className="space-y-6 p-4 pb-20">
-      <div className="text-center">
-        <Avatar className="w-24 h-24 mx-auto mb-4">
-          <AvatarImage src="/placeholder.svg" alt="Your profile" />
-          <AvatarFallback>RR</AvatarFallback>
-        </Avatar>
-        <h2 className="text-2xl font-bold text-primary">Red Raider</h2>
-        <p className="text-muted-foreground">Senior • Computer Science</p>
-        <p className="text-sm text-muted-foreground">Matches: {matchCount}</p>
-      </div>
+  const renderProfileTab = () => {
+    const userData = {
+      name: "Alex Rodriguez",
+      major: "Computer Science", 
+      year: "Senior",
+      bio: "Love coding, Red Raider football, and meeting new people on campus! Always down for coffee and discussing the latest tech trends.",
+      interests: ["Coding", "Football", "Coffee", "Gaming", "Photography"],
+      profileCompletion: 85
+    };
 
-      {/* Display selected badges */}
-      {getDisplayedBadges().length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>My Infections</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {getDisplayedBadges().map(badge => (
-                <div key={badge.id} className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1">
-                  <img 
-                    src={badge.icon} 
-                    alt={badge.name}
-                    className="w-4 h-4 object-contain"
-                  />
-                  <span className="text-sm font-medium text-primary">{badge.name}</span>
-                </div>
-              ))}
+    return (
+      <div className="min-h-screen overflow-y-auto pb-20">
+        <div className="space-y-6 p-4">
+          <div className="text-center">
+            <Avatar className="w-24 h-24 mx-auto mb-4">
+              <AvatarImage src="/placeholder.svg" alt="Your profile" />
+              <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
+                {userData.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <h2 className="text-2xl font-bold text-primary">{userData.name}</h2>
+            <p className="text-muted-foreground">{userData.year} • {userData.major}</p>
+            <p className="text-sm text-muted-foreground">Matches: {matchCount}</p>
+            
+            <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium">Profile Completion</span>
+                <span className="text-sm text-primary font-semibold">{userData.profileCompletion}%</span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-2">
+                <div 
+                  className="bg-primary h-2 rounded-full transition-all duration-500" 
+                  style={{ width: `${userData.profileCompletion}%` }}
+                ></div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            Account Settings
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full justify-start">
-            Edit Profile
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            Preferences
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            Privacy Settings
-          </Button>
-          <Button 
-            variant="destructive" 
-            className="w-full justify-start"
-            onClick={onLogout}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Log Out
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
+          {/* Bio Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>About Me</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground/80">{userData.bio}</p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {userData.interests.map((interest) => (
+                  <Badge key={interest} variant="secondary" className="text-xs">
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Display selected badges */}
+          {getDisplayedBadges().length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>My Infections</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {getDisplayedBadges().map(badge => (
+                    <div key={badge.id} className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1">
+                      <img 
+                        src={badge.icon} 
+                        alt={badge.name}
+                        className="w-4 h-4 object-contain"
+                      />
+                      <span className="text-sm font-medium text-primary">{badge.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Account Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button variant="outline" className="w-full justify-start">
+                <User className="w-4 h-4 mr-2" />
+                Edit Profile
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <Settings className="w-4 h-4 mr-2" />
+                Preferences
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <Settings className="w-4 h-4 mr-2" />
+                Privacy Settings
+              </Button>
+              <Button 
+                variant="destructive" 
+                className="w-full justify-start"
+                onClick={onLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Log Out
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  };
 
   const mockMatches = [
     { id: "1", name: "Sarah M.", lastMessage: "Hey! How's your semester going?", time: "2m", unread: true },

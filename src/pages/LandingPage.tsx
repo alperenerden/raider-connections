@@ -113,19 +113,19 @@ const LandingPage = ({ onLogin }: LandingPageProps) => {
         <div className="grid grid-cols-2 gap-4 max-w-md mx-auto text-center">
           <div className="flex flex-col items-center gap-2 p-4">
             <Shield className="w-8 h-8 text-primary" />
-            <span className="text-sm font-medium">TTU Verified</span>
+            <span className="text-sm font-medium text-primary-foreground">TTU Verified</span>
           </div>
           <div className="flex flex-col items-center gap-2 p-4">
             <Users className="w-8 h-8 text-primary" />
-            <span className="text-sm font-medium">Campus Events</span>
+            <span className="text-sm font-medium text-primary-foreground">Campus Events</span>
           </div>
           <div className="flex flex-col items-center gap-2 p-4">
             <Heart className="w-8 h-8 text-primary" />
-            <span className="text-sm font-medium">Smart Matching</span>
+            <span className="text-sm font-medium text-primary-foreground">Smart Matching</span>
           </div>
           <div className="flex flex-col items-center gap-2 p-4">
             <Zap className="w-8 h-8 text-primary" />
-            <span className="text-sm font-medium">Hotspots</span>
+            <span className="text-sm font-medium text-primary-foreground">Hotspots</span>
           </div>
         </div>
       </div>
@@ -232,7 +232,6 @@ const LandingPage = ({ onLogin }: LandingPageProps) => {
       {/* Footer */}
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>For verified Texas Tech students only</p>
-        <p className="mt-2">Made with ❤️ for Red Raiders</p>
       </div>
     </div>
   );
