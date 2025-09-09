@@ -101,7 +101,10 @@ const MainApp = ({ onLogout }: MainAppProps) => {
             key={match.id} 
             variant="ghost"
             className="w-full h-auto p-4 justify-start hover:bg-muted/50"
-            onClick={() => console.log(`Opening chat with ${match.name}`)}
+            onClick={() => {
+              setActiveTab("chat");
+              console.log(`Opening chat with ${match.name}`);
+            }}
           >
             <div className="flex items-center gap-4 w-full">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
@@ -282,6 +285,50 @@ const MainApp = ({ onLogout }: MainAppProps) => {
     { id: "4", name: "Jones AT&T Stadium", description: "Game day connections!", activeUsers: 156 },
   ];
 
+  const renderChatTab = () => (
+    <div className="min-h-screen overflow-y-auto pb-20">
+      <div className="flex items-center justify-between p-4 mb-6 border-b">
+        <Button 
+          variant="ghost" 
+          onClick={() => setActiveTab("matches")}
+          className="text-primary"
+        >
+          ← Back to Matches
+        </Button>
+        <h2 className="text-xl font-bold">Chat</h2>
+        <div></div>
+      </div>
+      
+      <div className="space-y-4 px-4">
+        <div className="bg-muted/50 rounded-lg p-4 max-w-xs">
+          <p className="text-sm">Hey! How's your semester going?</p>
+          <p className="text-xs text-muted-foreground mt-1">2m ago</p>
+        </div>
+        <div className="bg-primary/10 rounded-lg p-4 max-w-xs ml-auto">
+          <p className="text-sm">Great! Just finished my finals. How about you?</p>
+          <p className="text-xs text-muted-foreground mt-1">1m ago</p>
+        </div>
+        <div className="bg-muted/50 rounded-lg p-4 max-w-xs">
+          <p className="text-sm">Same here! Want to celebrate at the Rec Center?</p>
+          <p className="text-xs text-muted-foreground mt-1">Now</p>
+        </div>
+      </div>
+      
+      <div className="fixed bottom-20 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t">
+        <div className="flex gap-2 max-w-md mx-auto">
+          <input 
+            type="text" 
+            placeholder="Type a message..." 
+            className="flex-1 px-4 py-2 bg-input rounded-full border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <Button size="sm" className="rounded-full px-6">
+            Send
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case "discover": return renderDiscoverTab();
@@ -289,6 +336,7 @@ const MainApp = ({ onLogout }: MainAppProps) => {
       case "hotspots": return renderHotspotsTab();
       case "badges": return renderBadgesTab();
       case "profile": return renderProfileTab();
+      case "chat": return renderChatTab();
       default: return renderDiscoverTab();
     }
   };
