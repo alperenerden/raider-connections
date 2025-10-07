@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import SwipeCard from "@/components/SwipeCard";
 import BadgeSystem from "@/components/BadgeSystem";
 import { useBadges } from "@/hooks/useBadges";
+import { useProfiles } from "@/hooks/useProfiles";
+import { useSwipes } from "@/hooks/useSwipes";
+import { useMatches } from "@/hooks/useMatches";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import RaiderRashLogo from "@/components/RaiderRashLogo";
 import { Heart, MessageCircle, MapPin, Settings, User, Filter, LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface MainAppProps {
   onLogout: () => void;
@@ -16,48 +22,51 @@ interface MainAppProps {
 
 const MainApp = ({ onLogout }: MainAppProps) => {
   const [activeTab, setActiveTab] = useState("discover");
-  const [matchCount, setMatchCount] = useState(75); // Example match count
-  const { badges, toggleBadgeDisplay, getDisplayedBadges } = useBadges(matchCount);
-
-  // Mock data for demo
-  const mockProfiles = [
-    {
-      id: "1",
-      name: "Sarah",
-      age: 21,
-      major: "Business Administration",
-      year: "Junior",
-      bio: "Love going to football games and exploring Lubbock! Looking for someone to grab coffee with between classes ☕",
-      interests: ["Football", "Coffee", "Greek Life", "Photography", "Music"],
-      images: ["https://picsum.photos/400/600?random=1"],
-      distance: "0.5 mi",
-    },
-    {
-      id: "2", 
-      name: "Jake",
-      age: 22,
-      major: "Engineering",
-      year: "Senior",
-      bio: "Engineering student who loves Red Raider sports. Always down for a good time at the Rec Center 🏀",
-      interests: ["Basketball", "Engineering", "Gaming", "Movies", "Fitness"],
-      images: ["https://picsum.photos/400/600?random=2"],
-      distance: "1.2 mi",
-    }
-  ];
-
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
+  const [user, setUser] = useState<any>(null);
+  
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { profiles, loading: profilesLoading, currentUserId, removeProfile } = useProfiles();
+  const { swipe } = useSwipes();
+  const { matches, loading: matchesLoading } = useMatches();
+  const { badges, toggleBadgeDisplay, getDisplayedBadges } = useBadges(matches.length);
 
-  const handleSwipe = (direction: "left" | "right") => {
-    if (direction === "right") {
-      setMatchCount(prev => prev + 1);
-      console.log("Match created!");
-    }
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSwipe = async (direction: "left" | "right") => {
+    if (!currentUserId || !profiles[currentProfileIndex]) return;
+
+    const currentProfile = profiles[currentProfileIndex];
+    const isLike = direction === "right";
+
+    // Save swipe to database
+    await swipe(currentUserId, currentProfile.id, isLike);
+
+    // Remove profile from list
+    removeProfile(currentProfile.id);
     
-    console.log(`Swiped ${direction} on profile ${mockProfiles[currentProfileIndex]?.name}`);
-    if (currentProfileIndex < mockProfiles.length - 1) {
-      setCurrentProfileIndex(currentProfileIndex + 1);
-    } else {
-      setCurrentProfileIndex(0); // Loop back for demo
+    // Move to next profile (index stays same since we removed current)
+    if (currentProfileIndex >= profiles.length - 1) {
+      setCurrentProfileIndex(0);
     }
   };
 
@@ -72,9 +81,24 @@ const MainApp = ({ onLogout }: MainAppProps) => {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4">
-        {mockProfiles[currentProfileIndex] ? (
+        {profilesLoading ? (
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading profiles...</p>
+          </div>
+        ) : profiles[currentProfileIndex] ? (
           <SwipeCard 
-            profile={mockProfiles[currentProfileIndex]} 
+            profile={{
+              id: profiles[currentProfileIndex].id,
+              name: profiles[currentProfileIndex].display_name,
+              age: profiles[currentProfileIndex].age || 0,
+              major: "Red Raider",
+              year: "Student",
+              bio: profiles[currentProfileIndex].bio || "Hey there! 👋",
+              interests: profiles[currentProfileIndex].interests || [],
+              images: [profiles[currentProfileIndex].profile_image_url || "https://picsum.photos/400/600?random=1"],
+              distance: "Campus",
+            }}
             onSwipe={handleSwipe}
           />
         ) : (
@@ -92,37 +116,50 @@ const MainApp = ({ onLogout }: MainAppProps) => {
     <div className="min-h-screen overflow-y-auto pb-20">
       <div className="flex items-center justify-between p-4 mb-6">
         <h2 className="text-2xl font-bold">Your Matches</h2>
-        <Badge variant="secondary">{mockMatches.length}</Badge>
+        <Badge variant="secondary">{matches.length}</Badge>
       </div>
       
       <div className="space-y-4 px-4">
-        {mockMatches.map((match) => (
-          <Button
-            key={match.id} 
-            variant="ghost"
-            className="w-full h-auto p-4 justify-start hover:bg-muted/50"
-            onClick={() => {
-              setActiveTab("chat");
-              console.log(`Opening chat with ${match.name}`);
-            }}
-          >
-            <div className="flex items-center gap-4 w-full">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                <span className="text-2xl">📸</span>
+        {matchesLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          </div>
+        ) : matches.length === 0 ? (
+          <div className="text-center py-12 space-y-2">
+            <div className="text-4xl">💔</div>
+            <h3 className="font-semibold">No matches yet</h3>
+            <p className="text-sm text-muted-foreground">Start swiping to find your matches!</p>
+          </div>
+        ) : (
+          matches.map((match) => (
+            <Button
+              key={match.id} 
+              variant="ghost"
+              className="w-full h-auto p-4 justify-start hover:bg-muted/50"
+              onClick={() => {
+                setActiveTab("chat");
+                console.log(`Opening chat with ${match.matchedProfile.display_name}`);
+              }}
+            >
+              <div className="flex items-center gap-4 w-full">
+                <Avatar className="w-16 h-16">
+                  <AvatarImage src={match.matchedProfile.profile_image_url || undefined} />
+                  <AvatarFallback className="text-lg">
+                    {match.matchedProfile.display_name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 text-left">
+                  <h3 className="font-semibold">{match.matchedProfile.display_name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {match.matchedProfile.age && `${match.matchedProfile.age} • `}
+                    Start a conversation!
+                  </p>
+                </div>
+                <MessageCircle className="w-5 h-5 text-muted-foreground" />
               </div>
-              <div className="flex-1 text-left">
-                <h3 className="font-semibold">{match.name}</h3>
-                <p className="text-sm text-muted-foreground">{match.lastMessage}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">{match.time}</p>
-                {match.unread && (
-                  <div className="w-3 h-3 bg-primary rounded-full ml-auto mt-1"></div>
-                )}
-              </div>
-            </div>
-          </Button>
-        ))}
+            </Button>
+          ))
+        )}
       </div>
     </div>
   );
@@ -154,7 +191,7 @@ const MainApp = ({ onLogout }: MainAppProps) => {
   const renderBadgesTab = () => (
     <BadgeSystem 
       badges={badges}
-      currentMatches={matchCount}
+      currentMatches={matches.length}
       onToggleDisplay={toggleBadgeDisplay}
     />
   );
@@ -181,7 +218,7 @@ const MainApp = ({ onLogout }: MainAppProps) => {
             </Avatar>
             <h2 className="text-2xl font-bold text-primary">{userData.name}</h2>
             <p className="text-muted-foreground">{userData.year} • {userData.major}</p>
-            <p className="text-sm text-muted-foreground">Matches: {matchCount}</p>
+            <p className="text-sm text-muted-foreground">Matches: {matches.length}</p>
             
             <div className="mt-4 p-3 bg-muted/50 rounded-lg">
               <div className="flex justify-between items-center mb-2">
@@ -271,12 +308,6 @@ const MainApp = ({ onLogout }: MainAppProps) => {
       </div>
     );
   };
-
-  const mockMatches = [
-    { id: "1", name: "Sarah M.", lastMessage: "Hey! How's your semester going?", time: "2m", unread: true },
-    { id: "2", name: "Jake R.", lastMessage: "Want to study together?", time: "1h", unread: false },
-    { id: "3", name: "Emma L.", lastMessage: "See you at the game!", time: "3h", unread: false },
-  ];
 
   const mockHotspots = [
     { id: "1", name: "Student Union Building", description: "Great place to meet between classes", activeUsers: 23 },
