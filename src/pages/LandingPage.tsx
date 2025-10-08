@@ -7,7 +7,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FF6B6B] via-[#FF5252] to-[#FF4458] flex flex-col items-center justify-between p-6 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-700 via-gray-600 to-gray-500 flex flex-col items-center justify-between p-6 text-white">
       {/* Logo Section */}
       <div className="flex-1 flex flex-col items-center justify-center space-y-8">
         <RaiderRashLogo size="xl" className="animate-fade-in" />
@@ -19,13 +19,13 @@ const LandingPage = () => {
       <div className="w-full max-w-md space-y-4">
         {/* Terms Text */}
         <p className="text-center text-sm text-white/90 px-4">
-          By tapping Create Account or Sign In, you agree to our{' '}
+          By tapping Sign In, you agree to our{' '}
           <span className="underline font-semibold">Terms</span>. Learn how we process your data in our{' '}
           <span className="underline font-semibold">Privacy Policy</span> and{' '}
           <span className="underline font-semibold">Cookies Policy</span>.
         </p>
 
-        {/* Buttons */}
+        {/* Button */}
         <div className="space-y-3">
           <Button
             onClick={() => navigate("/auth")}
@@ -34,14 +34,6 @@ const LandingPage = () => {
           >
             <Mail className="w-5 h-5" />
             SIGN IN WITH TTU EMAIL
-          </Button>
-
-          <Button
-            onClick={() => navigate("/auth")}
-            variant="outline"
-            className="w-full h-14 rounded-full border-2 border-white bg-transparent hover:bg-white/10 text-white font-semibold text-base"
-          >
-            SIGN IN WITH PHONE NUMBER
           </Button>
         </div>
 

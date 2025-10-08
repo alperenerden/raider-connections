@@ -7,11 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import RaiderRashLogo from "@/components/RaiderRashLogo";
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [age, setAge] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -21,41 +18,18 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        toast({
-          title: "Welcome back!",
-          description: "Successfully logged in",
-        });
-        navigate("/app");
-      } else {
-        // Signup
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              display_name: displayName,
-              age: parseInt(age) || null,
-            },
-            emailRedirectTo: `${window.location.origin}/app`,
-          },
-        });
-
-        if (error) throw error;
-
-        toast({
-          title: "Account created!",
-          description: "Welcome to Raider Rash",
-        });
-        navigate("/app");
-      }
+      toast({
+        title: "Welcome back!",
+        description: "Successfully logged in",
+      });
+      navigate("/app");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -82,60 +56,15 @@ export default function Auth() {
         {/* Logo and Title */}
         <div className="flex flex-col items-center text-center space-y-3">
           <RaiderRashLogo size="lg" />
-          <h1 className="text-3xl font-bold">
-            {isLogin ? "Welcome Back" : "Join Raider Rash"}
-          </h1>
-          <p className="text-muted-foreground">
-            {isLogin ? "Log in to continue" : "Create your account"}
+          <h1 className="text-3xl font-bold">Welcome Back</h1>
+          <p className="text-lg font-semibold text-primary">
+            Swipe. Match. Wreck 'Em.
           </p>
-        </div>
-
-        {/* Auth Toggle */}
-        <div className="flex gap-2 bg-muted p-1 rounded-lg">
-          <Button
-            variant={isLogin ? "default" : "ghost"}
-            className="flex-1"
-            onClick={() => setIsLogin(true)}
-          >
-            Log In
-          </Button>
-          <Button
-            variant={!isLogin ? "default" : "ghost"}
-            className="flex-1"
-            onClick={() => setIsLogin(false)}
-          >
-            Sign Up
-          </Button>
         </div>
 
         {/* Auth Form */}
         <div className="bg-card rounded-lg p-6 shadow-lg border">
           <form onSubmit={handleAuth} className="space-y-4">
-            {!isLogin && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Display Name</label>
-                  <Input
-                    type="text"
-                    placeholder="Your name"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Age</label>
-                  <Input
-                    type="number"
-                    placeholder="18+"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    min="18"
-                  />
-                </div>
-              </>
-            )}
-
             <div>
               <label className="block text-sm font-medium mb-2">TTU Email</label>
               <Input
@@ -165,7 +94,7 @@ export default function Auth() {
               disabled={loading}
               size="lg"
             >
-              {loading ? "Loading..." : isLogin ? "Log In" : "Create Account"}
+              {loading ? "Loading..." : "Log In"}
             </Button>
           </form>
         </div>
