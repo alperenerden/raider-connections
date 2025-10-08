@@ -16,11 +16,7 @@ import RaiderRashLogo from "@/components/RaiderRashLogo";
 import { Heart, MessageCircle, MapPin, Settings, User, Filter, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface MainAppProps {
-  onLogout: () => void;
-}
-
-const MainApp = ({ onLogout }: MainAppProps) => {
+const MainApp = () => {
   const [activeTab, setActiveTab] = useState("discover");
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   const [user, setUser] = useState<any>(null);
@@ -68,6 +64,15 @@ const MainApp = ({ onLogout }: MainAppProps) => {
     if (currentProfileIndex >= profiles.length - 1) {
       setCurrentProfileIndex(0);
     }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged out",
+      description: "See you next time!",
+    });
+    navigate("/landing");
   };
 
   const renderDiscoverTab = () => (
@@ -297,7 +302,7 @@ const MainApp = ({ onLogout }: MainAppProps) => {
               <Button 
                 variant="destructive" 
                 className="w-full justify-start"
-                onClick={onLogout}
+                onClick={handleLogout}
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Log Out

@@ -68,32 +68,48 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-muted">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex flex-col items-center">
-          <RaiderRashLogo />
-          <h1 className="text-3xl font-bold mt-4">Raider Rash</h1>
-          <p className="text-muted-foreground mt-2">Connect with Red Raiders</p>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-muted">
+      <div className="w-full max-w-md space-y-6">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="mb-4"
+        >
+          ← Back
+        </Button>
+
+        {/* Logo and Title */}
+        <div className="flex flex-col items-center text-center space-y-3">
+          <RaiderRashLogo size="lg" />
+          <h1 className="text-3xl font-bold">
+            {isLogin ? "Welcome Back" : "Join Raider Rash"}
+          </h1>
+          <p className="text-muted-foreground">
+            {isLogin ? "Log in to continue" : "Create your account"}
+          </p>
         </div>
 
-        <div className="bg-card rounded-lg p-6 shadow-lg border">
-          <div className="flex gap-2 mb-6">
-            <Button
-              variant={isLogin ? "default" : "outline"}
-              className="flex-1"
-              onClick={() => setIsLogin(true)}
-            >
-              Login
-            </Button>
-            <Button
-              variant={!isLogin ? "default" : "outline"}
-              className="flex-1"
-              onClick={() => setIsLogin(false)}
-            >
-              Sign Up
-            </Button>
-          </div>
+        {/* Auth Toggle */}
+        <div className="flex gap-2 bg-muted p-1 rounded-lg">
+          <Button
+            variant={isLogin ? "default" : "ghost"}
+            className="flex-1"
+            onClick={() => setIsLogin(true)}
+          >
+            Log In
+          </Button>
+          <Button
+            variant={!isLogin ? "default" : "ghost"}
+            className="flex-1"
+            onClick={() => setIsLogin(false)}
+          >
+            Sign Up
+          </Button>
+        </div>
 
+        {/* Auth Form */}
+        <div className="bg-card rounded-lg p-6 shadow-lg border">
           <form onSubmit={handleAuth} className="space-y-4">
             {!isLogin && (
               <>
@@ -121,7 +137,7 @@ export default function Auth() {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2">TTU Email</label>
               <Input
                 type="email"
                 placeholder="your.email@ttu.edu"
@@ -147,14 +163,16 @@ export default function Auth() {
               type="submit"
               className="w-full"
               disabled={loading}
+              size="lg"
             >
               {loading ? "Loading..." : isLogin ? "Log In" : "Create Account"}
             </Button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground">
-          By continuing, you agree to our Terms & Privacy Policy
+        {/* Footer Text */}
+        <p className="text-center text-xs text-muted-foreground px-4">
+          By continuing, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
     </div>
