@@ -49,12 +49,17 @@ export const useProfiles = () => {
       const swipedProfileIds = swipedIds?.map(s => s.swiped_id) || [];
 
       // Fetch profiles excluding already swiped and current user
-      const { data, error } = await supabase
+      let query = supabase
         .from('profiles')
         .select('*')
-        .neq('id', currentProfile.id)
-        .not('id', 'in', `(${swipedProfileIds.join(',') || 'null'})`)
-        .limit(20);
+        .neq('id', currentProfile.id);
+      
+      // Only filter by swiped IDs if there are any
+      if (swipedProfileIds.length > 0) {
+        query = query.not('id', 'in', `(${swipedProfileIds.join(',')})`);
+      }
+      
+      const { data, error } = await query.limit(20);
 
       if (error) throw error;
       setProfiles(data || []);
