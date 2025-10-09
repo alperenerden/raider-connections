@@ -13,6 +13,14 @@ const LandingPage = () => {
         <RaiderRashLogo size="xl" className="animate-fade-in" />
         
         <h1 className="text-4xl font-bold tracking-tight">raider rash</h1>
+        
+        {/* Spread the Rash */}
+        <div className="text-center space-y-2 animate-fade-in">
+          <p className="text-2xl font-bold">Spread the Rash</p>
+          <p className="text-sm text-white/80 px-8">
+            Help grow the TTU community. Share with your friends and get them swiping!
+          </p>
+        </div>
       </div>
 
       {/* Bottom Section */}
