@@ -204,63 +204,93 @@ const MainApp = () => {
   const renderProfileTab = () => {
     const userData = {
       name: "Alex Rodriguez",
+      age: 20,
       major: "Computer Science", 
       year: "Senior",
-      bio: "Love coding, Red Raider football, and meeting new people on campus! Always down for coffee and discussing the latest tech trends.",
-      interests: ["Coding", "Football", "Coffee", "Gaming", "Photography"],
-      profileCompletion: 85
     };
 
     return (
-      <div className="min-h-screen overflow-y-auto pb-20">
-        <div className="space-y-6 p-4">
-          <div className="text-center">
-            <Avatar className="w-24 h-24 mx-auto mb-4">
+      <div className="min-h-screen overflow-y-auto pb-20 bg-background">
+        <div className="flex flex-col items-center p-6 space-y-6">
+          {/* Large Profile Photo */}
+          <div className="mt-8">
+            <Avatar className="w-40 h-40 border-4 border-border shadow-lg">
               <AvatarImage src="/placeholder.svg" alt="Your profile" />
-              <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
+              <AvatarFallback className="text-4xl font-bold bg-primary text-primary-foreground">
                 {userData.name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            <h2 className="text-2xl font-bold text-primary">{userData.name}</h2>
-            <p className="text-muted-foreground">{userData.year} • {userData.major}</p>
-            <p className="text-sm text-muted-foreground">Matches: {matches.length}</p>
-            
-            <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium">Profile Completion</span>
-                <span className="text-sm text-primary font-semibold">{userData.profileCompletion}%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-500" 
-                  style={{ width: `${userData.profileCompletion}%` }}
-                ></div>
-              </div>
+          </div>
+
+          {/* Name and Age */}
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold">{userData.name}, {userData.age}</h1>
+            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+              <span className="text-primary text-xs">✓</span>
             </div>
           </div>
 
-          {/* Bio Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>About Me</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-foreground/80">{userData.bio}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {userData.interests.map((interest) => (
-                  <Badge key={interest} variant="secondary" className="text-xs">
-                    {interest}
-                  </Badge>
-                ))}
+          {/* Action Buttons */}
+          <div className="flex items-center gap-6 w-full max-w-md justify-center">
+            <Button
+              variant="ghost"
+              size="lg"
+              className="flex flex-col gap-2 h-auto py-4"
+              onClick={handleLogout}
+            >
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <Settings className="w-6 h-6 text-muted-foreground" />
               </div>
-            </CardContent>
-          </Card>
+              <span className="text-xs text-muted-foreground uppercase">Settings</span>
+            </Button>
+
+            <Button
+              variant="default"
+              size="lg"
+              className="flex flex-col gap-2 h-auto py-4 bg-primary hover:bg-primary/90"
+            >
+              <div className="w-16 h-16 rounded-full bg-primary shadow-lg flex items-center justify-center relative">
+                <Heart className="w-7 h-7 text-white fill-white" />
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center">
+                  <span className="text-primary font-bold text-lg">+</span>
+                </div>
+              </div>
+              <span className="text-xs text-white uppercase font-semibold">Add Media</span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="lg"
+              className="flex flex-col gap-2 h-auto py-4"
+            >
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <User className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <span className="text-xs text-muted-foreground uppercase">Edit Info</span>
+            </Button>
+          </div>
+
+          {/* Photo Tip Banner */}
+          <div className="w-full max-w-md">
+            <div className="gradient-primary rounded-2xl p-4 flex items-center justify-between shadow-md">
+              <p className="text-white font-medium">
+                Photo Tip: A smile should get their attention
+              </p>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="bg-white/20 hover:bg-white/30 text-white rounded-full"
+              >
+                <span className="text-xl">+</span>
+              </Button>
+            </div>
+          </div>
 
           {/* Display selected badges */}
           {getDisplayedBadges().length > 0 && (
-            <Card>
+            <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>My Infections</CardTitle>
+                <CardTitle className="text-lg">My Infections</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
@@ -279,34 +309,35 @@ const MainApp = () => {
             </Card>
           )}
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="w-5 h-5" />
-                Account Settings
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full justify-start">
-                <User className="w-4 h-4 mr-2" />
-                Edit Profile
+          {/* Get Premium Section */}
+          <Card className="w-full max-w-md bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <CardContent className="p-6 text-center space-y-3">
+              <div className="text-4xl">🔥</div>
+              <h3 className="text-xl font-bold">Get Raider Rash Premium</h3>
+              <p className="text-muted-foreground">See who Likes You & more!</p>
+              <Button className="w-full" size="lg">
+                GET PREMIUM
               </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Settings className="w-4 h-4 mr-2" />
-                Preferences
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Settings className="w-4 h-4 mr-2" />
-                Privacy Settings
-              </Button>
-              <Button 
-                variant="destructive" 
-                className="w-full justify-start"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Log Out
-              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Profile Stats */}
+          <Card className="w-full max-w-md">
+            <CardContent className="p-6">
+              <div className="flex justify-around">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-primary">{matches.length}</p>
+                  <p className="text-sm text-muted-foreground">Matches</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-primary">{userData.age}</p>
+                  <p className="text-sm text-muted-foreground">Age</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-primary">{getDisplayedBadges().length}</p>
+                  <p className="text-sm text-muted-foreground">Badges</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
