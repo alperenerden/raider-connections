@@ -37,10 +37,13 @@ export const useSwipes = () => {
 
       return false; // Not a match
     } catch (error: any) {
-      console.error('Error swiping:', error);
+      // Only log detailed errors in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error swiping:', error);
+      }
       toast({
         title: "Error",
-        description: "Failed to save swipe",
+        description: "Unable to process swipe. Please try again.",
         variant: "destructive",
       });
       return false;

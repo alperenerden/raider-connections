@@ -6,6 +6,21 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import RaiderRashLogo from "@/components/RaiderRashLogo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { z } from "zod";
+
+// Input validation schema
+const authSchema = z.object({
+  email: z.string()
+    .email('Invalid email format')
+    .endsWith('@ttu.edu', 'Must use TTU email')
+    .max(255, 'Email too long'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(72, 'Password too long')
+    .regex(/[A-Z]/, 'Must contain uppercase letter')
+    .regex(/[a-z]/, 'Must contain lowercase letter')
+    .regex(/[0-9]/, 'Must contain number')
+});
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -19,9 +34,12 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Validate inputs
+      const validated = authSchema.parse({ email, password });
+
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: validated.email,
+        password: validated.password,
       });
 
       if (error) throw error;
@@ -32,11 +50,19 @@ export default function Auth() {
       });
       navigate("/app");
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Unable to sign in. Please check your credentials.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -47,11 +73,14 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Validate inputs
+      const validated = authSchema.parse({ email, password });
+      
       const redirectUrl = `${window.location.origin}/app`;
       
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validated.email,
+        password: validated.password,
         options: {
           emailRedirectTo: redirectUrl,
         },
@@ -64,11 +93,19 @@ export default function Auth() {
         description: "Successfully signed up. You can now log in.",
       });
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Unable to create account. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
