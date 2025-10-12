@@ -18,5 +18,11 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    // Deduplicate React to prevent multiple instances
+    dedupe: ['react', 'react-dom'],
+  },
+  optimizeDeps: {
+    // Force Vite to pre-bundle these dependencies
+    include: ['react', 'react-dom', '@radix-ui/react-tooltip'],
   },
 }));
