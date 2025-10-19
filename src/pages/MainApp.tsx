@@ -236,7 +236,12 @@ const MainApp = () => {
               variant="ghost"
               size="lg"
               className="flex flex-col gap-2 h-auto py-4"
-              onClick={handleLogout}
+              onClick={() => {
+                toast({
+                  title: "Settings",
+                  description: "Settings page coming soon!",
+                });
+              }}
             >
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                 <Settings className="w-6 h-6 text-muted-foreground" />
@@ -248,6 +253,12 @@ const MainApp = () => {
               variant="default"
               size="lg"
               className="flex flex-col gap-2 h-auto py-4 bg-primary hover:bg-primary/90"
+              onClick={() => {
+                toast({
+                  title: "Add Media",
+                  description: "Photo upload coming soon!",
+                });
+              }}
             >
               <div className="w-16 h-16 rounded-full bg-primary shadow-lg flex items-center justify-center relative">
                 <Heart className="w-7 h-7 text-white fill-white" />
@@ -262,6 +273,12 @@ const MainApp = () => {
               variant="ghost"
               size="lg"
               className="flex flex-col gap-2 h-auto py-4"
+              onClick={() => {
+                toast({
+                  title: "Edit Profile",
+                  description: "Profile editing coming soon!",
+                });
+              }}
             >
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                 <User className="w-6 h-6 text-muted-foreground" />
@@ -269,6 +286,17 @@ const MainApp = () => {
               <span className="text-xs text-muted-foreground uppercase">Edit Info</span>
             </Button>
           </div>
+
+          {/* Logout Button */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-muted-foreground"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
 
           {/* Photo Tip Banner */}
           <div className="w-full max-w-md">
