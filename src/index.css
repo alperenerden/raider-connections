@@ -239,7 +239,12 @@ All colors MUST be HSL.
   }
 
   .mobile-navigation {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 
   /* Prevent text selection for better mobile UX */
