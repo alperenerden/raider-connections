@@ -143,7 +143,6 @@ const MainApp = () => {
               className="w-full h-auto p-4 justify-start hover:bg-muted/50"
               onClick={() => {
                 setActiveTab("chat");
-                console.log(`Opening chat with ${match.matchedProfile.display_name}`);
               }}
             >
               <div className="flex items-center gap-4 w-full">
